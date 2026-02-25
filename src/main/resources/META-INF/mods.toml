@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="MIT"
+
+[[mods]]
+modId="megastorage"
+version="1.0.0"
+displayName="Mega Storage Addon"
+authors="hdeadf"
+description='''
+Аддон для Applied Energistics 2: огромные ячейки и новые возможности.
+'''
+
+[[dependencies.megastorage]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36.2.0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.megastorage]]
+    modId="appliedenergistics2"
+    mandatory=true
+    versionRange="[8.4.0,)"
+    ordering="BEFORE"
+    side="BOTH"
