@@ -1,7 +1,7 @@
 package com.ae2modd.megastorage;
 
 import appeng.api.config.FuzzyMode;
-import appeng.api.storage.cells.ICellItem;
+import appeng.api.storage.ICellTypeItem; // Пробуем этот путь
 import appeng.api.storage.cells.ICellWorkbenchItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -15,7 +15,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem {
+public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellTypeItem {
 
     public MegaCellItem(Properties properties) {
         super(properties.stacksTo(1));
@@ -25,10 +25,10 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem 
     @Override
     public ITextComponent getName(ItemStack stack) {
         String name = new TranslationTextComponent(this.getDescriptionId()).getString();
-        // В 1.16.5 MCP используем IFormattableTextComponent для сборки цветного текста
+        // Используем IFormattableTextComponent — это база для 1.16.5
         IFormattableTextComponent rainbowName = new StringTextComponent("");
         
-        long time = System.currentTimeMillis() / 80; 
+        long time = System.currentTimeMillis() / 100; 
         
         for (int i = 0; i < name.length(); i++) {
             int color = java.awt.Color.HSBtoRGB((float) ((time + i * 4) % 100) / 100F, 0.8F, 1.0F);
@@ -38,16 +38,16 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem 
         return rainbowName.withStyle(TextFormatting.BOLD);
     }
 
-    // --- ОТОБРАЖЕНИЕ СТАТИСТИКИ (Как в AE2) ---
+    // --- ОТОБРАЖЕНИЕ СТАТИСТИКИ (0 из 500) ---
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        // Добавляем строки, которые имитируют стандартный вид ячеек AE2
+        // Эти строки будут серыми, как в оригинальном моде
         tooltip.add(new StringTextComponent("0 из 536,870,912 байт использовано").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("0 из 523 типов").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("AE2 Extras").withStyle(TextFormatting.AQUA));
     }
 
-    // --- МЕТОДЫ ДЛЯ СОВМЕСТИМОСТИ С МЭ-НАКОПИТЕЛЕМ ---
+    // --- МЕТОДЫ ЯЧЕЙКИ ---
     @Override
     public int getBytes(ItemStack cellItem) {
         return 536870912;
@@ -63,20 +63,15 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem 
         return 4.0;
     }
 
+    // Эти методы нужны для ICellWorkbenchItem
     @Override
-    public boolean isEditable(ItemStack is) {
-        return true;
-    }
+    public boolean isEditable(ItemStack is) { return true; }
 
     @Override
-    public IItemHandler getConfigInventory(ItemStack is) {
-        return new ItemStackHandler(63);
-    }
+    public IItemHandler getConfigInventory(ItemStack is) { return new ItemStackHandler(63); }
 
     @Override
-    public IItemHandler getUpgradesInventory(ItemStack is) {
-        return new ItemStackHandler(2);
-    }
+    public IItemHandler getUpgradesInventory(ItemStack is) { return new ItemStackHandler(2); }
 
     @Override
     public void setFuzzyMode(ItemStack stack, FuzzyMode mode) {
