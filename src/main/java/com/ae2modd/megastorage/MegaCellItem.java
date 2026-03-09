@@ -16,61 +16,26 @@ import java.util.List;
 
 public class MegaCellItem extends Item implements ICellWorkbenchItem {
 
-    public MegaCellItem(Properties properties) {
-        super(properties.stacksTo(1));
+    public MegaCellItem(Properties props) {
+        super(props.stacksTo(1));
     }
 
-    // --- РАДУЖНОЕ НАЗВАНИЕ ---
-    @Override
-    public ITextComponent getName(ItemStack stack) {
-
-        String name = new TranslationTextComponent(this.getDescriptionId()).getString();
-        IFormattableTextComponent rainbowName = new StringTextComponent("");
-
-        long time = System.currentTimeMillis() / 100;
-
-        for (int i = 0; i < name.length(); i++) {
-
-            int color = java.awt.Color.HSBtoRGB(
-                    ((time + i * 4) % 100) / 100F,
-                    0.8F,
-                    1.0F
-            );
-
-            rainbowName.append(
-                    new StringTextComponent(String.valueOf(name.charAt(i)))
-                            .withStyle(Style.EMPTY.withColor(Color.fromRgb(color & 0xFFFFFF)))
-            );
-        }
-
-        return rainbowName.withStyle(TextFormatting.BOLD);
-    }
-
-    // --- TOOLTIP ---
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
 
-        tooltip.add(new StringTextComponent("0 из 536,870,912 байт использовано").withStyle(TextFormatting.GRAY));
-        tooltip.add(new StringTextComponent("0 из 523 типов").withStyle(TextFormatting.GRAY));
-        tooltip.add(new StringTextComponent("AE2 Extras").withStyle(TextFormatting.AQUA));
+        tooltip.add(new StringTextComponent("536,870,912 Bytes").withStyle(TextFormatting.GRAY));
+        tooltip.add(new StringTextComponent("523 Types").withStyle(TextFormatting.GRAY));
+        tooltip.add(new StringTextComponent("Mega Storage Cell").withStyle(TextFormatting.AQUA));
 
     }
 
-    // --- ПАРАМЕТРЫ ЯЧЕЙКИ (используются другими классами мода) ---
-
-    public int getBytes(ItemStack stack) {
+    public int getBytes() {
         return 536870912;
     }
 
-    public int getTotalTypes(ItemStack stack) {
+    public int getTypes() {
         return 523;
     }
-
-    public double getIdleDrain(ItemStack stack) {
-        return 4.0;
-    }
-
-    // --- ICellWorkbenchItem ---
 
     @Override
     public boolean isEditable(ItemStack is) {
@@ -90,12 +55,9 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem {
     @Override
     public void setFuzzyMode(ItemStack stack, FuzzyMode mode) {
 
-        CompoundNBT root = stack.getOrCreateTag();
-        CompoundNBT ae2 = root.contains("AE2") ? root.getCompound("AE2") : new CompoundNBT();
+        CompoundNBT tag = stack.getOrCreateTag();
+        tag.putString("FuzzyMode", mode.name());
 
-        ae2.putString("FuzzyMode", mode == null ? "IGNORE_ALL" : mode.name());
-
-        root.put("AE2", ae2);
     }
 
     @Override
