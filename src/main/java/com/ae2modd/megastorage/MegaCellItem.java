@@ -1,7 +1,7 @@
 package com.ae2modd.megastorage;
 
 import appeng.api.config.FuzzyMode;
-import appeng.api.storage.ICellItem; // Изменил пакет здесь
+import appeng.api.storage.cells.ICellItem;
 import appeng.api.storage.cells.ICellWorkbenchItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -21,14 +21,14 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem 
         super(properties.stacksTo(1));
     }
 
-    // РАДУЖНОЕ НАЗВАНИЕ
+    // --- РАДУЖНОЕ НАЗВАНИЕ ---
     @Override
     public ITextComponent getName(ItemStack stack) {
         String name = new TranslationTextComponent(this.getDescriptionId()).getString();
-        // Используем MutableComponent для создания цветного текста
-        net.minecraft.util.text.MutableComponent rainbowName = new StringTextComponent("");
+        // В 1.16.5 MCP используем IFormattableTextComponent для сборки цветного текста
+        IFormattableTextComponent rainbowName = new StringTextComponent("");
         
-        long time = System.currentTimeMillis() / 80; // Скорость смены цветов
+        long time = System.currentTimeMillis() / 80; 
         
         for (int i = 0; i < name.length(); i++) {
             int color = java.awt.Color.HSBtoRGB((float) ((time + i * 4) % 100) / 100F, 0.8F, 1.0F);
@@ -38,16 +38,16 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem 
         return rainbowName.withStyle(TextFormatting.BOLD);
     }
 
-    // СТАТИСТИКА (Ноль из 523 типов и т.д.)
+    // --- ОТОБРАЖЕНИЕ СТАТИСТИКИ (Как в AE2) ---
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        // Мы просто добавляем текст, AE2 сам обновит данные, когда ячейка будет в сети
+        // Добавляем строки, которые имитируют стандартный вид ячеек AE2
         tooltip.add(new StringTextComponent("0 из 536,870,912 байт использовано").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("0 из 523 типов").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("AE2 Extras").withStyle(TextFormatting.AQUA));
     }
 
-    // МЕТОДЫ ДЛЯ МЭ-НАКОПИТЕЛЯ (Теперь с @Override, так как пакет исправлен)
+    // --- МЕТОДЫ ДЛЯ СОВМЕСТИМОСТИ С МЭ-НАКОПИТЕЛЕМ ---
     @Override
     public int getBytes(ItemStack cellItem) {
         return 536870912;
