@@ -1,8 +1,9 @@
 package com.ae2modd.megastorage;
 
+import appeng.api.config.IncludeExclude;
 import appeng.api.storage.cells.ICellInventoryHandler;
-import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.cells.ISaveProvider;
+import appeng.api.storage.data.IAEStack;
 
 import net.minecraft.item.ItemStack;
 
@@ -19,6 +20,11 @@ public class MegaCellInventory<T extends IAEStack<T>> implements ICellInventoryH
     @Override
     public int getStatusForCell() {
         return 0;
+    }
+
+    @Override
+    public IncludeExclude getIncludeExcludeMode() {
+        return IncludeExclude.WHITELIST;
     }
 
 }
