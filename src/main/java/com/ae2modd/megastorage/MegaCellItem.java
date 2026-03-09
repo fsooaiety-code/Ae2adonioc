@@ -1,20 +1,15 @@
 package com.ae2modd.megastorage;
 
 import appeng.api.config.FuzzyMode;
-import appeng.api.storage.ICellItem;
 import appeng.api.storage.cells.ICellWorkbenchItem;
-import net.minecraft.client.util.ITooltipFlag;
+import appeng.api.storage.cells.ICellTypeItem; // Проверенный путь
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.*;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem {
+public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellTypeItem {
 
     public MegaCellItem(Properties properties) {
         super(properties.stacksTo(1));
@@ -33,19 +28,15 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem 
         return rainbowName.withStyle(TextFormatting.BOLD);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        tooltip.add(new StringTextComponent("536,870,912 байт").withStyle(TextFormatting.GRAY));
-        tooltip.add(new StringTextComponent("AE2 Extras").withStyle(TextFormatting.AQUA));
-    }
-
+    // Методы ячейки для 1.16.5
     @Override public int getBytes(ItemStack is) { return 536870912; }
     @Override public int getTotalTypes(ItemStack is) { return 523; }
     @Override public double getIdleDrain(ItemStack is) { return 4.0; }
+    
+    // Методы верстака
     @Override public boolean isEditable(ItemStack is) { return true; }
     @Override public IItemHandler getConfigInventory(ItemStack is) { return new ItemStackHandler(63); }
     @Override public IItemHandler getUpgradesInventory(ItemStack is) { return new ItemStackHandler(2); }
-
     @Override public void setFuzzyMode(ItemStack stack, FuzzyMode mode) {
         stack.getOrCreateTagElement("AE2").putString("FuzzyMode", mode.name());
     }
