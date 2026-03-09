@@ -1,7 +1,6 @@
 package com.ae2modd.megastorage;
 
 import appeng.api.config.FuzzyMode;
-import appeng.api.storage.ICellTypeItem; // Пробуем этот путь
 import appeng.api.storage.cells.ICellWorkbenchItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -15,7 +14,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellTypeItem {
+public class MegaCellItem extends Item implements ICellWorkbenchItem {
 
     public MegaCellItem(Properties properties) {
         super(properties.stacksTo(1));
@@ -24,60 +23,78 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellTypeI
     // --- РАДУЖНОЕ НАЗВАНИЕ ---
     @Override
     public ITextComponent getName(ItemStack stack) {
+
         String name = new TranslationTextComponent(this.getDescriptionId()).getString();
-        // Используем IFormattableTextComponent — это база для 1.16.5
         IFormattableTextComponent rainbowName = new StringTextComponent("");
-        
-        long time = System.currentTimeMillis() / 100; 
-        
+
+        long time = System.currentTimeMillis() / 100;
+
         for (int i = 0; i < name.length(); i++) {
-            int color = java.awt.Color.HSBtoRGB((float) ((time + i * 4) % 100) / 100F, 0.8F, 1.0F);
-            rainbowName.append(new StringTextComponent(String.valueOf(name.charAt(i)))
-                    .withStyle(Style.EMPTY.withColor(Color.fromRgb(color & 0xFFFFFF))));
+
+            int color = java.awt.Color.HSBtoRGB(
+                    ((time + i * 4) % 100) / 100F,
+                    0.8F,
+                    1.0F
+            );
+
+            rainbowName.append(
+                    new StringTextComponent(String.valueOf(name.charAt(i)))
+                            .withStyle(Style.EMPTY.withColor(Color.fromRgb(color & 0xFFFFFF)))
+            );
         }
+
         return rainbowName.withStyle(TextFormatting.BOLD);
     }
 
-    // --- ОТОБРАЖЕНИЕ СТАТИСТИКИ (0 из 500) ---
+    // --- TOOLTIP ---
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        // Эти строки будут серыми, как в оригинальном моде
+
         tooltip.add(new StringTextComponent("0 из 536,870,912 байт использовано").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("0 из 523 типов").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("AE2 Extras").withStyle(TextFormatting.AQUA));
+
     }
 
-    // --- МЕТОДЫ ЯЧЕЙКИ ---
-    @Override
-    public int getBytes(ItemStack cellItem) {
+    // --- ПАРАМЕТРЫ ЯЧЕЙКИ (используются другими классами мода) ---
+
+    public int getBytes(ItemStack stack) {
         return 536870912;
     }
 
-    @Override
-    public int getTotalTypes(ItemStack cellItem) {
+    public int getTotalTypes(ItemStack stack) {
         return 523;
     }
 
-    @Override
-    public double getIdleDrain(ItemStack cellItem) {
+    public double getIdleDrain(ItemStack stack) {
         return 4.0;
     }
 
-    // Эти методы нужны для ICellWorkbenchItem
-    @Override
-    public boolean isEditable(ItemStack is) { return true; }
+    // --- ICellWorkbenchItem ---
 
     @Override
-    public IItemHandler getConfigInventory(ItemStack is) { return new ItemStackHandler(63); }
+    public boolean isEditable(ItemStack is) {
+        return true;
+    }
 
     @Override
-    public IItemHandler getUpgradesInventory(ItemStack is) { return new ItemStackHandler(2); }
+    public IItemHandler getConfigInventory(ItemStack is) {
+        return new ItemStackHandler(63);
+    }
+
+    @Override
+    public IItemHandler getUpgradesInventory(ItemStack is) {
+        return new ItemStackHandler(2);
+    }
 
     @Override
     public void setFuzzyMode(ItemStack stack, FuzzyMode mode) {
+
         CompoundNBT root = stack.getOrCreateTag();
         CompoundNBT ae2 = root.contains("AE2") ? root.getCompound("AE2") : new CompoundNBT();
+
         ae2.putString("FuzzyMode", mode == null ? "IGNORE_ALL" : mode.name());
+
         root.put("AE2", ae2);
     }
 
