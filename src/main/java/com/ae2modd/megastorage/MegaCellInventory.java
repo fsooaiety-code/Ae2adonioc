@@ -1,6 +1,5 @@
 package com.ae2modd.megastorage;
 
-import appeng.api.config.IncludeExcludeMode;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.cells.ICellInventoryHandler;
 import appeng.api.storage.data.IAEStack;
@@ -17,5 +16,5 @@ public class MegaCellInventory<T extends IAEStack<T>> implements ICellInventoryH
 
     @Override public IStorageChannel<T> getChannel() { return this.channel; }
     @Override public boolean isFuzzy() { return false; }
-    @Override public IncludeExcludeMode getIncludeExcludeMode() { return IncludeExcludeMode.WHITELIST; }
+    @Override public boolean isPreformatted() { return false; }
 }

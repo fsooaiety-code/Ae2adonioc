@@ -1,15 +1,15 @@
 package com.ae2modd.megastorage;
 
 import appeng.api.config.FuzzyMode;
+import appeng.api.storage.ICellItem;
 import appeng.api.storage.cells.ICellWorkbenchItem;
-import appeng.api.storage.cells.ICellTypeItem; // Проверенный путь
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.*;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellTypeItem {
+public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellItem {
 
     public MegaCellItem(Properties properties) {
         super(properties.stacksTo(1));
@@ -28,12 +28,9 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem, ICellTypeI
         return rainbowName.withStyle(TextFormatting.BOLD);
     }
 
-    // Методы ячейки для 1.16.5
     @Override public int getBytes(ItemStack is) { return 536870912; }
     @Override public int getTotalTypes(ItemStack is) { return 523; }
     @Override public double getIdleDrain(ItemStack is) { return 4.0; }
-    
-    // Методы верстака
     @Override public boolean isEditable(ItemStack is) { return true; }
     @Override public IItemHandler getConfigInventory(ItemStack is) { return new ItemStackHandler(63); }
     @Override public IItemHandler getUpgradesInventory(ItemStack is) { return new ItemStackHandler(2); }
