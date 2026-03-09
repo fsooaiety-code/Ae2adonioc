@@ -14,11 +14,12 @@ public class MegaCellHandler implements ICellHandler {
     }
 
     @Override
-    public <T> ICellInventory<T> getCellInventory(
+    public <T extends appeng.api.storage.data.IAEStack<T>> ICellInventory<T> getCellInventory(
             ItemStack stack,
             ISaveProvider host,
             IStorageChannel<T> channel
     ) {
         return null;
     }
+
 }
