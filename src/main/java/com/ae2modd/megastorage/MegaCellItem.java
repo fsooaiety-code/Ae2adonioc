@@ -6,7 +6,9 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -27,14 +29,6 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem {
         tooltip.add(new StringTextComponent("523 Types").withStyle(TextFormatting.GRAY));
         tooltip.add(new StringTextComponent("Mega Storage Cell").withStyle(TextFormatting.AQUA));
 
-    }
-
-    public int getBytes() {
-        return 536870912;
-    }
-
-    public int getTypes() {
-        return 523;
     }
 
     @Override

@@ -1,20 +1,23 @@
 package com.ae2modd.megastorage;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModItems {
-    public static final DeferredRegister<Item> ITEMS = 
-            DeferredRegister.create(ForgeRegistries.ITEMS, "megastorage");
 
-    public static final RegistryObject<Item> MEGA_CELL = ITEMS.register("mega_cell", 
-            () -> new MegaCellItem(new Item.Properties().tab(ItemGroup.TAB_MISC).stacksTo(1)));
+    public static Item MEGA_CELL;
 
-    public static void register(IEventBus eventBus) {
-        ITEMS.register(eventBus);
+    public static void register(Object bus) {}
+
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+
+        MEGA_CELL = new MegaCellItem(new Item.Properties())
+                .setRegistryName("megastorage", "mega_cell");
+
+        event.getRegistry().register(MEGA_CELL);
     }
 }

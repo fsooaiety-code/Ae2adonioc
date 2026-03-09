@@ -1,8 +1,9 @@
 package com.ae2modd.megastorage;
 
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ICellInventory;
-import appeng.api.storage.cells.CellInventory;
+import appeng.api.storage.cells.ISaveProvider;
 import net.minecraft.item.ItemStack;
 
 public class MegaCellHandler implements ICellHandler {
@@ -13,7 +14,11 @@ public class MegaCellHandler implements ICellHandler {
     }
 
     @Override
-    public ICellInventory getCellInventory(ItemStack stack, Object host) {
-        return CellInventory.create(stack, host);
+    public <T> ICellInventory<T> getCellInventory(
+            ItemStack stack,
+            ISaveProvider host,
+            IStorageChannel<T> channel
+    ) {
+        return null;
     }
 }
