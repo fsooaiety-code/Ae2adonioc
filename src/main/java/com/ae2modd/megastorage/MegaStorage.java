@@ -1,19 +1,12 @@
 package com.ae2modd.megastorage;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod("megastorage")
-public class MegaStorage {
+public class MegaStorageMod {
 
-    public MegaStorage() {
-
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        ModItems.register(eventBus);
-
-        MinecraftForge.EVENT_BUS.register(this);
+    public MegaStorageMod() {
+        Registration.init();
     }
+
 }
