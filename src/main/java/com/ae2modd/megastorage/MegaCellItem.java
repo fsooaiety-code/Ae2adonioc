@@ -4,7 +4,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.storage.cells.ICellWorkbenchItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -17,7 +17,6 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem {
         super(properties);
     }
 
-    // Убрали @Override, так как эти методы не принадлежат ICellWorkbenchItem
     public int getBytes(ItemStack cellItem) {
         return 536_870_912; // 512 MiB
     }
@@ -35,11 +34,8 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem {
         return true;
     }
 
-    // Возвращаем IItemHandler вместо IInventory
     @Override
     public IItemHandler getConfigInventory(ItemStack is) {
-        // ВАЖНО: Для полноценного сохранения фильтров в будущем 
-        // сюда нужно будет добавить логику чтения/записи в NBT предмета (is.getOrCreateTag())
         return new ItemStackHandler(63);
     }
 
@@ -50,9 +46,8 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem {
 
     @Override
     public void setFuzzyMode(ItemStack stack, FuzzyMode mode) {
-        CompoundTag root = stack.getOrCreateTag();
-        CompoundTag ae2 = root.contains(TAG_AE2) ? root.getCompound(TAG_AE2) : new CompoundTag();
-        // Используем IGNORE_ALL вместо NONE
+        CompoundNBT root = stack.getOrCreateTag();
+        CompoundNBT ae2 = root.contains(TAG_AE2) ? root.getCompound(TAG_AE2) : new CompoundNBT();
         ae2.putString(TAG_FUZZY, mode == null ? "IGNORE_ALL" : mode.name());
         root.put(TAG_AE2, ae2);
     }
@@ -60,15 +55,15 @@ public class MegaCellItem extends Item implements ICellWorkbenchItem {
     @Override
     public FuzzyMode getFuzzyMode(ItemStack stack) {
         if (stack.hasTag() && stack.getOrCreateTag().contains(TAG_AE2)) {
-            CompoundTag ae2 = stack.getOrCreateTag().getCompound(TAG_AE2);
+            CompoundNBT ae2 = stack.getOrCreateTag().getCompound(TAG_AE2);
             if (ae2.contains(TAG_FUZZY)) {
                 try {
                     return FuzzyMode.valueOf(ae2.getString(TAG_FUZZY));
                 } catch (IllegalArgumentException e) {
-                    return FuzzyMode.IGNORE_ALL; // Используем IGNORE_ALL
+                    return FuzzyMode.IGNORE_ALL;
                 }
             }
         }
-        return FuzzyMode.IGNORE_ALL; // Используем IGNORE_ALL
+        return FuzzyMode.IGNORE_ALL;
     }
 }
